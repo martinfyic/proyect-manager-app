@@ -17,4 +17,11 @@ export const ligthTheme = createTheme({
 			main: red.A400,
 		},
 	},
+	components: {
+		MuiAppBar: {
+			defaultProps: {
+				elevation: 0,
+			},
+		},
+	},
 });
