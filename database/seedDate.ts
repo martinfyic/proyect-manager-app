@@ -1,27 +1,15 @@
-# ⚡ Proyect Manager App - Next Js
+interface SeedDate {
+	entries: SeedEntry[];
+}
 
-Para correr localmente se necesita la base de datos
+interface SeedEntry {
+	description: string;
+	createdAt: number;
+	status: string;
+}
 
-```bash
-docker-compose up -d
-```
-
-- El -d significa **detached**
-
-MongoDB Url local `mongodb://localhost:27017/entries-database`
-
-## Configurar variables de entorno
-
-Renombrar el archivo [.env.example](.env.example) a `.env`
-
-## Llenar la base de datos con informacion de prueba
-
-- Enpoint[GET]: `http://localhost:3000/api/seed`
-
-**mock data:**
-
-```typescript
-entries: [
+export const seedData: SeedDate = {
+	entries: [
 		{
 			description:
 				'Voluptate commodo labore excepteur ut aliqua pariatur minim do in nisi ad velit elit mollit.',
@@ -40,4 +28,4 @@ entries: [
 			status: 'finished',
 		},
 	],
-```
+};
