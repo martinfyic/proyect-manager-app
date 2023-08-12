@@ -13,7 +13,7 @@ export default function handler(
 
 	if (!mongoose.isValidObjectId(id)) {
 		res.status(400).json({
-			message: `Endpoint [${req.method}]/${req.url}/${id} invalid id`,
+			message: `Endpoint [${req.method}] ${req.url}/${id} invalid id`,
 		});
 	}
 
@@ -23,7 +23,7 @@ export default function handler(
 
 		default:
 			return res.status(400).json({
-				message: `Endpoint [${req.method}]/${req.url}/${id} does not exist`,
+				message: `Endpoint [${req.method}] ${req.url}/${id} does not exist`,
 			});
 	}
 }
@@ -41,7 +41,7 @@ const updateEntries = async (
 	if (!entryToUpdate) {
 		await db.disconnect();
 		return res.status(400).json({
-			message: `Endpoint [${req.method}]/${req.url}/${id} there is no entry for that id: ${id}`,
+			message: `Endpoint [${req.method}] ${req.url}/${id} there is no entry for that id: ${id}`,
 		});
 	}
 
@@ -50,11 +50,15 @@ const updateEntries = async (
 		status = entryToUpdate.status,
 	} = req.body;
 
-	const updatedEntry = await EntryModel.findByIdAndUpdate(
-		id,
-		{ description, status },
-		{ runValidators: true, new: true }
-	);
+	try {
+		entryToUpdate.description = description;
+		entryToUpdate.status = status;
+		await entryToUpdate.save();
 
-	return res.status(200).json(updatedEntry!);
+		await db.disconnect();
+		return res.status(200).json(entryToUpdate);
+	} catch (error: any) {
+		await db.disconnect();
+		return res.status(400).json({ message: error.errors.status.message });
+	}
 };
