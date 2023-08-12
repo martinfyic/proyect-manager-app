@@ -10,6 +10,14 @@ docker-compose up -d
 
 MongoDB Url local `mongodb://localhost:27017/entries-database`
 
+_En el caso de que mongocompas no encuentre la base de datos debes correr el siguiente comando:_
+
+```bash
+net stop MongoDB
+```
+
+_Esto frena el servidor de mongo en el caso de que lo tengas correindo en tu pc, asi podras utilizarlo desde docker_
+
 ## Configurar variables de entorno
 
 Renombrar el archivo [.env.example](.env.example) a `.env`
