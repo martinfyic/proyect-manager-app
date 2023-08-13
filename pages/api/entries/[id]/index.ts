@@ -21,7 +21,7 @@ export default function handler(
 		case 'PUT':
 			return updateEntries(req, res);
 		case 'GET':
-			return getEntrieById(req, res);
+			return getEntryById(req, res);
 
 		default:
 			return res.status(400).json({
@@ -65,7 +65,7 @@ const updateEntries = async (
 	}
 };
 
-const getEntrieById = async (
+const getEntryById = async (
 	req: NextApiRequest,
 	res: NextApiResponse<Data>
 ) => {
