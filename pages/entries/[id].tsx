@@ -1,4 +1,4 @@
-import { ChangeEvent, useState, useMemo, FC } from 'react';
+import { ChangeEvent, useState, useMemo, FC, useContext } from 'react';
 import { GetServerSideProps } from 'next';
 import {
 	Button,
@@ -21,6 +21,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { dbEntries } from '@/database';
 import { Layout } from '@/components/layouts';
 import { Entry, EntryStatus } from '@/interfaces';
+import { EntriesContext } from '@/context';
+import { dateFunction } from '@/utils';
 
 const validStatus: EntryStatus[] = ['pending', 'inProgress', 'finished'];
 
@@ -29,6 +31,7 @@ interface Props {
 }
 
 const EntryPage: FC<Props> = ({ entry }) => {
+	const { updateEntry } = useContext(EntriesContext);
 	const [inputValue, setInputValue] = useState(entry.description);
 	const [status, setStatus] = useState<EntryStatus>(entry.status);
 	const [touched, setTouched] = useState(false);
@@ -47,7 +50,15 @@ const EntryPage: FC<Props> = ({ entry }) => {
 	};
 
 	const onSave = () => {
-		console.log({ inputValue, status });
+		if (inputValue.trim().length === 0) return;
+
+		const updatedEntry: Entry = {
+			...entry,
+			description: inputValue,
+			status,
+		};
+
+		updateEntry(updatedEntry, true);
 	};
 
 	return (
@@ -66,7 +77,9 @@ const EntryPage: FC<Props> = ({ entry }) => {
 					<Card>
 						<CardHeader
 							title='Entry'
-							subheader={`Creada hace: ${entry.createdAt} minutos`}
+							subheader={`Created: ${dateFunction.getFormatDistanceToNow(
+								entry.createdAt
+							)}`}
 						/>
 						<CardContent>
 							<TextField
