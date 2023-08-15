@@ -2,13 +2,23 @@
 
 Para correr localmente se necesita la base de datos
 
+- Reconstruir modulos de node:
+
+```bash
+# con yarn
+yarn install
+
+# con npm
+npm install
+```
+
+- Conexion con base de datos mediante docker:
+
 ```bash
 docker-compose up -d
 ```
 
-- El -d significa **detached**
-
-MongoDB Url local `mongodb://localhost:27017/entries-database`
+_El -d significa **detached**_
 
 _En el caso de que mongocompas no encuentre la base de datos debes correr el siguiente comando:_
 
@@ -22,7 +32,21 @@ _Esto frena el servidor de mongo en el caso de que lo tengas correindo en tu pc,
 
 Renombrar el archivo [.env.example](.env.example) a `.env`
 
+Ejemplo:
+
+`MONGO_URL_DEV=`mongodb://localhost:27017/entries-database
+
 ## Llenar la base de datos con informacion de prueba
+
+Se debe tener la app corriendo
+
+```
+yarn dev
+
+# or
+
+npm run dev
+```
 
 - Enpoint[GET]: `http://localhost:3000/api/seed`
 
