@@ -22,6 +22,8 @@ export default function handler(
 			return updateEntries(req, res);
 		case 'GET':
 			return getEntryById(req, res);
+		case 'DELETE':
+			return deleteEntryById(req, res);
 
 		default:
 			return res.status(400).json({
@@ -82,4 +84,31 @@ const getEntryById = async (
 	}
 
 	return res.status(200).json(entry);
+};
+
+const deleteEntryById = async (
+	req: NextApiRequest,
+	res: NextApiResponse<Data>
+) => {
+	const { id } = req.query;
+
+	await db.connect();
+
+	const entryToDelete = await EntryModel.findById(id);
+
+	if (!entryToDelete) {
+		await db.disconnect();
+		return res.status(400).json({
+			message: `Endpoint [${req.method}] ${req.url}/${id} there is no entry for that id: ${id}`,
+		});
+	}
+
+	try {
+		await entryToDelete.deleteOne();
+		await db.disconnect();
+		return res.status(200).json({ message: 'Deleted' });
+	} catch (error: any) {
+		await db.disconnect();
+		return res.status(400).json({ message: error.errors.status.message });
+	}
 };
