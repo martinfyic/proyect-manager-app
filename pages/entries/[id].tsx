@@ -1,5 +1,6 @@
 import { ChangeEvent, useState, useMemo, FC, useContext } from 'react';
 import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import {
 	Button,
 	capitalize,
@@ -31,10 +32,11 @@ interface Props {
 }
 
 const EntryPage: FC<Props> = ({ entry }) => {
-	const { updateEntry } = useContext(EntriesContext);
+	const { updateEntry, deletEntry } = useContext(EntriesContext);
 	const [inputValue, setInputValue] = useState(entry.description);
 	const [status, setStatus] = useState<EntryStatus>(entry.status);
 	const [touched, setTouched] = useState(false);
+	const router = useRouter();
 
 	const isNotValid = useMemo(
 		() => inputValue.length <= 0 && touched,
@@ -59,6 +61,11 @@ const EntryPage: FC<Props> = ({ entry }) => {
 		};
 
 		updateEntry(updatedEntry, true);
+	};
+
+	const onDelete = () => {
+		deletEntry(entry);
+		router.push(`/`);
 	};
 
 	return (
@@ -132,6 +139,7 @@ const EntryPage: FC<Props> = ({ entry }) => {
 			</Grid>
 
 			<IconButton
+				onClick={onDelete}
 				sx={{
 					position: 'fixed',
 					bottom: 30,
