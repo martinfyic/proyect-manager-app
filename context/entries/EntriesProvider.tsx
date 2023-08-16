@@ -60,8 +60,29 @@ export const EntriesProvider: FC<Props> = ({ children }) => {
 		refreshEntries();
 	}, []);
 
+	const deletEntry = async (entry: Entry) => {
+		try {
+			await entriesApi.delete<Entry>(`/entries/${entry._id}`);
+
+			dispatch({ type: '[Entry] - Entry-Delete', payload: entry });
+
+			enqueueSnackbar('Entry deleted', {
+				variant: 'error',
+				autoHideDuration: 1500,
+				anchorOrigin: {
+					vertical: 'top',
+					horizontal: 'right',
+				},
+			});
+		} catch (error) {
+			console.log({ error });
+		}
+	};
+
 	return (
-		<EntriesContext.Provider value={{ ...state, addNewEntry, updateEntry }}>
+		<EntriesContext.Provider
+			value={{ ...state, addNewEntry, updateEntry, deletEntry }}
+		>
 			{children}
 		</EntriesContext.Provider>
 	);
